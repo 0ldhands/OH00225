@@ -5,10 +5,13 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const port = 2001;
+const dotenv=require('dotenv')
 
 const app = express();
 
-app.use(cors());
+dotenv.config()
+
+app.use(cors( ));
 app.use(bodyParser.json());
 
 app.use('./uploads', express.static(path.join(__dirname, 'uploads')),(err)=>{
@@ -40,13 +43,14 @@ const upload = multer({ storage: storage });
 const uploadExcel = multer({storage: storageExcel});
 
 const db = mysql.createPool({
-    host: "127.0.0.1",
-    port: "3306",
-    user: "root",
-    password: "root@root123",
-    database: "school"
-
-
+    host:process.env.DB_HOST,
+    port:process.env.DB_PORT,
+    user:process.env.DB_USER,
+    password:process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+     ssl: {
+        rejectUnauthorized: true
+    }
 });
 
 (async () => {
